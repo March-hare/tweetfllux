@@ -37,7 +37,7 @@ Searching by tag:
 
 		./tweetflux ows oo opdx
 
-This will produce a runtime logfile in `tags_ows_oo_opdx.log` and save off JSON files in the `fluxes/tags_ows_oo_opdx.log` directory.
+This will produce a runtime logfile in `tags_ows_oo_opdx.log` and save off JSON files in the `fluxes/tags_ows_oo_opdx` directory.
 
 TODO
 ----
