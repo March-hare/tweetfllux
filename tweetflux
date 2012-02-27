@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'tweetstream'
+require 'json'
+require 'yaml'
+
+def load_auth
+	if auth = YAML::load( File.open( 'authentication.yml' ) )
+		return auth
+	end
+	puts "Please load a Twitter username and password into authentication.yml"
+	return nil
+end
+
+def load_client
+	auth = load_auth
+	if auth.nil?
+		puts "Unable to connect to twitter without authentication."
+		exit 1
+	end
+
+	client = TweetStream::Client.new(auth)
+end
+
+def prepare_fluxes_directory
+	where_fluxes_go = "#{Dir.pwd}/fluxes"
+
+	if Dir.exists?(where_fluxes_go) 
+		return where_fluxes_go
+	end
+
+	if Dir.mkdir(where_fluxes_go)
+		return where_fluxes_go
+	end
+
+	puts "Unable to find or create #{where_fluxes_go}."
+	puts "Please create this manually, ensure this script can write there, and re-run this."
+
+	exit 1
+end
+
+def track_tweetstream
+	client = load_client
+	where_fluxes_go = prepare_fluxes_directory
+
+	puts "Tracking tweetstream for #{ARGV.join(', ')}..."
+	puts "Use ^C to exit."
+
+	client.track(ARGV) do |status|
+	  puts "[#{status.user.screen_name}] #{status.text}"
+	end
+end
+
+track_tweetstream
